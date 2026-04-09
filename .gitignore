@@ -1,0 +1,35 @@
+# 1. BẢO MẬT (Tuyệt đối không push)
+.env
+**/.env
+
+# 2. DỮ LIỆU (File Parquet cực nặng, không đẩy lên Git)
+data/
+
+# 3. LOGS (Các file ghi chép lịch sử chạy code)
+logs/
+**/logs/
+*.log
+
+# 4. PYTHON CACHE & BUILD METADATA (Code rác hệ thống tự sinh ra)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+
+# 5. MÔI TRƯỜNG ẢO
+venv/
+env/
+.venv/
+
+# 6. SPARK & HADOOP CACHE (Rác do Spark sinh ra khi tải thư viện)
+.ivy2/
+spark-warehouse/
+metastore_db/
+derby.log
+
+# 7. CẤU HÌNH IDE & OS (Giữ cho kho code sạch sẽ)
+.idea/
+.vscode/
+.DS_Store
