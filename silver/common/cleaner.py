@@ -6,6 +6,10 @@ from silver.schemas.raw_event_schema import RAW_EVENT_SCHEMA
 
 logger = logging.getLogger("silver_pipeline")
 
+'''
+File cleaner.py nằm trong thư mục common, 
+đảm nhận nhiệm vụ đọc dữ liệu thô từ MongoDB, áp dụng schema, 
+và làm sạch cơ bản (loại bỏ hàng không hợp lệ, deduplicate theo event_uuid)'''
 
 def _read_from_mongo(spark: SparkSession, cfg) -> DataFrame:
     return (
@@ -17,7 +21,12 @@ def _read_from_mongo(spark: SparkSession, cfg) -> DataFrame:
         .load()
     )
 
+'''
+Chuyển toàn bộ dòng thành JSON string,
+sau đó parse lại với schema RAW_EVENT_SCHEMA (được import từ silver.schemas.raw_event_schema).
 
+Mục đích: Ép kiểu dữ liệu và chọn đúng các trường theo schema,
+bỏ qua các trường lạ hoặc không đúng cấu trúc.'''
 def _apply_schema(df: DataFrame) -> DataFrame:
 
     return (

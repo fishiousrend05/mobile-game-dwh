@@ -4,6 +4,15 @@ from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
 logger = logging.getLogger("silver_pipeline")
+'''
+Standardizer thực hiện ba nhóm chuẩn hóa chính:
+
+Timestamp standardization – Chuyển đổi timestamp từ milliseconds về dạng timestamp, tạo cột UTC và local time dựa theo country code.
+
+Platform standardization – Chuẩn hóa tên nền tảng (ios/android/unknown) bất kể viết hoa hay viết thường.
+
+Country standardization – Chuẩn hóa mã quốc gia thành chữ hoa, loại bỏ khoảng trắng.'''
+
 
 _COUNTRY_TZ_MAP = {
     "VN": "Asia/Ho_Chi_Minh",

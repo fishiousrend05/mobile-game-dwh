@@ -33,3 +33,6 @@ derby.log
 .idea/
 .vscode/
 .DS_Store
+
+#8. File powerBI vì ch xong
+*.pbix
