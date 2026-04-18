@@ -8,7 +8,10 @@ Dự án này xây dựng một hệ thống Data Pipeline end-to-end để thu 
 Dự án mô phỏng sát với thực tế luồng xử lý dữ liệu Batch Processing (xử lý theo lô) thường thấy ở các công ty công nghệ và studio game.
 
 Mục Tiêu Kỹ Thuật (Learning Objectives)Data Engineering:
-Ứng dụng mô hình Medallion Architecture (Bronze -> Silver -> Gold).ETL/ELT Processing: Sử dụng PySpark để xử lý dữ liệu lớn, làm sạch và chuyển đổi định dạng từ NoSQL (JSON) sang Relational Database (Dạng bảng).Advanced SQL: Áp dụng SQL nâng cao (Window Functions, CTEs, Joins phức tạp) trong MySQL 8.0 để giải quyết các bài toán phân tích đa chiều.Data Modeling: Tự tay thiết kế Star Schema (Fact & Dimension tables) tối ưu cho việc truy vấn.
+Ứng dụng mô hình Medallion Architecture (Bronze -> Silver -> Gold).
+ETL/ELT Processing: Sử dụng PySpark để xử lý dữ liệu lớn, làm sạch và chuyển đổi định dạng từ NoSQL (JSON) sang Relational Database (Dạng bảng).
+Advanced SQL: Áp dụng SQL nâng cao (Window Functions, CTEs, Joins phức tạp) trong MySQL 8.0 để giải quyết các bài toán phân tích đa chiều.
+Data Modeling: Tự tay thiết kế Star Schema (Fact & Dimension tables) tối ưu cho việc truy vấn.
 
 Kiến Trúc & Công Nghệ (Tech Stack & Architecture)Luồng dữ liệu di chuyển theo 3 tầng chuẩn mực:
 
