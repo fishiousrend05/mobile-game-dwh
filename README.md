@@ -3,26 +3,38 @@ Mobile Game Telemetry Data Warehouse
 Tổng Quan Dự Án (Project Overview)
 
 Dự án này xây dựng một hệ thống Data Pipeline end-to-end để thu thập, xử lý và phân tích hành vi người chơi trong một tựa game mobile giả định. Mục tiêu cốt lõi là chuyển đổi các dòng log sự kiện (event logs) thô ráp thành những chỉ số phân tích kinh doanh (Business Metrics) mang tính quyết định.Hệ thống giúp trả lời hai câu hỏi sống còn của ngành game:
+
 "Người chơi có quay lại không?" 
+
 "Họ nạp tiền ở giai đoạn nào?" 
+
 Dự án mô phỏng sát với thực tế luồng xử lý dữ liệu Batch Processing (xử lý theo lô) thường thấy ở các công ty công nghệ và studio game.
 
 Mục Tiêu Kỹ Thuật (Learning Objectives)Data Engineering:
+
 Ứng dụng mô hình Medallion Architecture (Bronze -> Silver -> Gold).
+
 ETL/ELT Processing: Sử dụng PySpark để xử lý dữ liệu lớn, làm sạch và chuyển đổi định dạng từ NoSQL (JSON) sang Relational Database (Dạng bảng).
+
 Advanced SQL: Áp dụng SQL nâng cao (Window Functions, CTEs, Joins phức tạp) trong MySQL 8.0 để giải quyết các bài toán phân tích đa chiều.
+
 Data Modeling: Tự tay thiết kế Star Schema (Fact & Dimension tables) tối ưu cho việc truy vấn.
 
 Kiến Trúc & Công Nghệ (Tech Stack & Architecture)Luồng dữ liệu di chuyển theo 3 tầng chuẩn mực:
 
 Data Generation: Python (thư viện Faker) giả lập 100,000 sự kiện (login, làm nhiệm vụ, nạp tiền) dưới dạng JSON.
+
 Bronze Layer (Data Lake/Raw): MongoDB tiếp nhận và lưu trữ toàn bộ dữ liệu JSON nguyên bản.
+
 Silver Layer (Processing/Cleansing): PySpark đọc dữ liệu, bóc tách (flatten nested JSON), làm sạch dữ liệu lỗi, map ID và chuẩn hóa kiểu dữ liệu.
+
 Gold Layer (Data Warehouse): MySQL 8.0+ lưu trữ dữ liệu đã được mô hình hóa theo dạng Star Schema.
 Visualization: Power BI (Trực quan hóa dữ liệu thông qua Data Marts & Views).
 
+
 Vòng Đời Cấu Trúc Dữ Liệu (Data Architecture & Schema)
-ầng Bronze (Raw JSON)
+
+Tầng Bronze (Raw JSON)
 Dữ liệu thô gửi về từ Game Client chứa các cấu trúc lồng nhau (nested) phức tạp. 
 Ví dụ một Common Wrapper:JSON{
   "event_uuid": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
