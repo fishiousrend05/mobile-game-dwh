@@ -290,42 +290,4 @@ END$$
 DELIMITER ;
 
 
--- =============================================================
--- PHẦN 3: USAGE REFERENCE
--- Ví dụ cách dùng functions trong query thực tế.
--- Uncomment để chạy thử.
--- =============================================================
 
-
--- Kiểm tra toàn bộ config hiện tại
-SELECT category, config_key, config_value, description
-FROM business_config
-ORDER BY category, config_key;
-
--- Dùng functions trong query
-SELECT
-    user_id,
-    total_revenue_usd,
-    fn_value_segment(total_revenue_usd)         AS value_segment,
-    fn_lifecycle_stage(days_since_last_active)  AS lifecycle_stage,
-    fn_engagement_segment(days_since_last_active) AS engagement_segment,
-    fn_level_band(current_level)                AS level_band
-FROM mart_user_profile
-LIMIT 10;
-
--- Thay đổi threshold: nâng whale lên $100
-UPDATE business_config
-SET config_value = '100'
-WHERE config_key = 'whale_min_revenue_usd';
--- Sau đó tất cả query dùng fn_value_segment() tự động reflect threshold mới.
-
--- Kiểm tra retention benchmark
-SELECT
-    cohort_date,
-    retention_d1,
-    fn_retention_benchmark(retention_d1, 'd1')  AS d1_grade,
-    fn_retention_benchmark(retention_d7, 'd7')  AS d7_grade
-FROM mart_retention
-WHERE acquisition_channel = 'all'
-ORDER BY cohort_date DESC
-LIMIT 30;

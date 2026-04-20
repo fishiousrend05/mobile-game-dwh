@@ -1,20 +1,19 @@
 import random
 from datetime import datetime, timedelta
 from faker import Faker
-from utils import setup_logger
-
+from .utils import setup_logger
 logger = setup_logger()
 
 # Import kết nối DB
-from database import get_collection
+from .database import get_collection
 
 # Import các hàm Generator
-from generator.common import init_device_state, init_user_state
-from generator.user_events import (
+from .generator.common import init_device_state, init_user_state
+from .generator.user_events import (
     create_account_event, create_login_event,
     create_tutorial_event, create_level_up_event
 )
-from generator.purchase_events import create_purchase_event, get_product_details
+from .generator.purchase_events import create_purchase_event, get_product_details
 
 fake = Faker()
 

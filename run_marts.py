@@ -1,3 +1,16 @@
+# gold/run_marts.py
+"""
+Chạy toàn bộ mart tables và views trong thư mục mart/.
+
+Thứ tự thực thi:
+  1. mart_*.sql (CREATE TABLE + REPLACE INTO) — theo domain alphabetically
+  2. vw_*.sql   (CREATE OR REPLACE VIEW)      — sau khi mart tables đã có data
+
+Chạy:
+  python gold/run_marts.py
+  python gold/run_marts.py --dry-run   # chỉ in danh sách file, không chạy
+"""
+
 import os
 import sys
 import argparse
@@ -17,8 +30,9 @@ def get_connection():
         user=os.getenv("MYSQL_USER", "root"),
         password=os.getenv("MYSQL_PASSWORD", ""),
         database=os.getenv("MYSQL_DB", "game_gold"),
+        # Cho phép nhiều statement trong một execute() call
+        # Cần thiết vì mỗi file .sql chứa cả DDL lẫn DML
         allow_local_infile=False,
-        use_pure=True
     )
 
 
@@ -48,35 +62,66 @@ def collect_sql_files(base_dir: str) -> list[str]:
 # SQL execution
 # ──────────────────────────────────────────────────────────────────
 
+def _split_sql_statements(sql: str) -> list:
+    """
+    Tách SQL script thành statements an toàn.
+    Không dùng multi=True vì CMySQLCursor không hỗ trợ.
+    Theo dõi depth của parentheses để ';' bên trong PARTITION block
+    không bị tách nhầm thành statement terminator.
+    """
+    import re
+    sql = re.sub(r"--[^\n]*", "", sql)
+    sql = re.sub(r"/\*.*?\*/", "", sql, flags=re.DOTALL)
+    statements, current, depth = [], [], 0
+    for char in sql:
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+        elif char == ";" and depth == 0:
+            stmt = "".join(current).strip()
+            if stmt:
+                statements.append(stmt)
+            current = []
+            continue
+        current.append(char)
+    last = "".join(current).strip()
+    if last:
+        statements.append(last)
+    return statements
+
+
 def execute_sql_file(conn, file_path: str) -> int:
+    """
+    Đọc và thực thi một file .sql.
+    Trả về số statements đã chạy thành công.
+    """
     with open(file_path, encoding="utf-8") as f:
         sql_script = f.read()
 
+    statements = _split_sql_statements(sql_script)
     cursor = conn.cursor()
     count = 0
 
     try:
-        # Tách các lệnh SQL bằng dấu chấm phẩy
-        statements = sql_script.split(';')
-
-        for statement in statements:
-            # Chỉ chạy những đoạn có chứa chữ (bỏ qua dấu cách/xuống dòng thừa)
-            if statement.strip():
-                cursor.execute(statement)
-                count += 1
+        for stmt in statements:
+            cursor.execute(stmt)
+            count += 1
 
         # Commit sau mỗi file
         conn.commit()
 
-    except Exception as e:
+    except mysql.connector.Error as e:
         conn.rollback()
         raise RuntimeError(
-            f"Lỗi khi chạy '{os.path.basename(file_path)}':\n  {e}"
+            f"Lỗi khi chạy '{os.path.basename(file_path)}':\n"
+            f"  [MySQL {e.errno}] {e.msg}"
         ) from e
     finally:
         cursor.close()
 
     return count
+
 
 # ──────────────────────────────────────────────────────────────────
 # Main

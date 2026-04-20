@@ -138,8 +138,8 @@ SELECT
     -- Acquisition
     du.acquisition_channel,
     du.campaign_id,
-    du.account_created_date,
-    du.days_since_install,
+    COALESCE(du.account_created_date, CURDATE())        AS account_created_date,
+    IFNULL(DATEDIFF(CURDATE(), du.account_created_date), 0) AS days_since_install,
 
     -- Device (từ dim_users first_device_model + dim_device platform/country)
     du.device_model,
@@ -159,7 +159,7 @@ SELECT
     COALESCE(m.purchase_count, 0)                       AS purchase_count,
 
     -- Activity
-    du.account_created_date     AS first_active_date,
+    COALESCE(du.account_created_date, CURDATE())        AS first_active_date,
     ls.last_active_date,
     COALESCE(a.total_sessions, 0)                       AS total_sessions,
     COALESCE(a.total_events, 0)                         AS total_events,

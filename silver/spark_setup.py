@@ -1,6 +1,19 @@
 # silver/spark_setup.py
-from pyspark.sql import SparkSession
+import os
+import sys
+import findspark
 
+# 1. Ép PySpark dùng đúng Python của Anaconda Base (nơi bạn chạy thành công)
+# Điều này giúp tránh lỗi 'JavaPackage' do sai lệch môi trường
+os.environ['PYSPARK_PYTHON'] = r"C:\Users\Msi\anaconda3\python.exe"
+os.environ['PYSPARK_DRIVER_PYTHON'] = r"C:\Users\Msi\anaconda3\python.exe"
+
+# 2. Khởi tạo findspark (để chắc chắn)
+findspark.init()
+
+from pyspark.sql import SparkSession
+# ... các đoạn code phía dưới giữ nguyên
+from pyspark.sql import SparkSession
 
 def create_spark_session(app_name: str = "silver_pipeline") -> SparkSession:
     """
