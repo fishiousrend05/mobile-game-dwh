@@ -49,12 +49,7 @@ SELECT
     f.median_days_to_purchase,
 
     -- ── Funnel health flag (Tableau color coding) ─────────────
-    -- Dựa trên overall CR so với threshold game mobile thông thường
-    CASE
-        WHEN f.cr_overall >= 0.05   THEN 'healthy'     -- >= 5% overall CR
-        WHEN f.cr_overall >= 0.02   THEN 'warning'
-        ELSE                             'critical'
-    END                                         AS funnel_health,
+    fn_funnel_health(f.cr_overall)              AS funnel_health,
 
     f.updated_at
 

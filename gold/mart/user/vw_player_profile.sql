@@ -53,21 +53,9 @@ SELECT
 
     -- ── Computed segments (Tableau dùng trực tiếp) ────────────
     -- Value segment dựa trên revenue
-    CASE
-        WHEN p.total_revenue_usd >= 50   THEN 'whale'
-        WHEN p.total_revenue_usd >= 10   THEN 'dolphin'
-        WHEN p.total_revenue_usd >  0    THEN 'minnow'
-        ELSE                                  'non_payer'
-    END                                             AS value_segment,
+    fn_value_segment(p.total_revenue_usd)           AS value_segment,
 
-    -- Engagement segment dựa trên days_active trong 30 ngày gần nhất
-    CASE
-        WHEN l.days_since_last_active IS NULL   THEN 'new'
-        WHEN l.days_since_last_active <= 1      THEN 'daily'
-        WHEN l.days_since_last_active <= 7      THEN 'weekly'
-        WHEN l.days_since_last_active <= 30     THEN 'casual'
-        ELSE                                         'churned'
-    END                                             AS engagement_segment,
+    fn_engagement_segment(l.days_since_last_active) AS engagement_segment,
 
     -- Tutorial funnel position
     CASE

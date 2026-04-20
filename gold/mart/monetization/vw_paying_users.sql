@@ -32,11 +32,7 @@ SELECT
                                             AS days_to_convert,
 
     -- ── Value segment ─────────────────────────────────────────
-    CASE
-        WHEN p.total_revenue_usd >= 50  THEN 'whale'
-        WHEN p.total_revenue_usd >= 10  THEN 'dolphin'
-        ELSE                                 'minnow'
-    END                                     AS value_segment,
+    fn_value_segment(p.total_revenue_usd)   AS value_segment,
 
     -- ── Progression context (tại thời điểm hiện tại) ─────────
     p.current_level,
