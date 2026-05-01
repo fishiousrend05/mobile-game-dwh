@@ -1,13 +1,13 @@
-# 🚀 Mobile Game Telemetry Data Warehouse
+#  Mobile Game Telemetry Data Warehouse
 
-## 📌 Overview
+##  Overview
 
 Dự án này là một Data Engineering pipeline end-to-end mô phỏng hệ thống phân tích dữ liệu viễn trắc (telemetry) cho một tựa game mobile. Hệ thống tự động giả lập hành vi người chơi, xử lý dữ liệu qua kiến trúc Medallion (Bronze - Silver - Gold), điều phối tự động và xây dựng các Data Marts sẵn sàng cho phân tích.
 - **Vấn đề giải quyết:** Xây dựng một luồng dữ liệu đáng tin cậy để phân tích hành vi người chơi (engagement, retention), theo dõi tiến trình (funnel) và đối soát doanh thu game.
 - **Nguồn dữ liệu:** Dữ liệu giả lập (mock data) về users, devices, events (login, tutorial, level_up) và purchases được tạo bằng Python/Faker và lưu trữ thô tại MongoDB.
 - **Kết quả đầu ra:** Dữ liệu Parquet được làm sạch (Silver), các bảng Dimension/Fact lưu tại MySQL (Gold), các SQL Views (Data Marts) phân tích chuyên sâu, và một báo cáo Power BI
 
-## 🏗 Architecture
+##  Architecture
 
 
 Luồng xử lý của hệ thống:
@@ -19,7 +19,7 @@ Luồng xử lý của hệ thống:
 5. Toàn bộ luồng batch daily được điều phối (Orchestration) nhịp nhàng thông qua Prefect.
 6. Power BI kết nối trực tiếp vào Tầng Gold để lên biểu đồ trực quan hóa.
 
-## 🔄 Chi tiết Pipeline
+##  Chi tiết Pipeline
 
 - **Extract / Ingest:** `bronze/generate_bronze_data.py` chịu trách nhiệm sinh dữ liệu người chơi mới và các sự kiện in-game, sau đó đẩy trực tiếp vào MongoDB.
 
@@ -33,7 +33,7 @@ Luồng xử lý của hệ thống:
 
 
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 mobile-game-dwh/
@@ -50,7 +50,7 @@ mobile-game-dwh/
 ```
 
 
-## ⚙️ How to Run
+##  How to Run
 
 1. Hướng dẫn cài đặt & Chạy dự án
 
@@ -97,7 +97,7 @@ prefect server start
 ```
 
 
-## 📊 Kết quả
+##  Kết quả
 
 - Dữ liệu thô được lưu trữ an toàn dưới định dạng Parquet có phân vùng.
 - Bảng Dimension và Fact trong MySQL chuẩn xác, không bị lỗi mất mát thông tin khi Upsert.
@@ -105,7 +105,7 @@ prefect server start
 - Bảng điều khiển (Dashboard) trên Power BI hoạt động trơn tru.
 
 
-## 💡 Bài học kinh nghiệm
+##  Bài học kinh nghiệm
 
 - Nắm vững cách thiết kế và triển khai kiến trúc Medallion Data Architecture cho luồng dữ liệu viễn trắc.
 - Giải quyết triệt để bài toán Anti-Null Overwrite khi thực hiện thao tác Upsert giữa PySpark và hệ quản trị CSDL quan hệ (MySQL).
