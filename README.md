@@ -19,7 +19,7 @@ Pipeline flow:
 5. Prefect orchestrates the entire daily batch pipeline, managing dependencies and logging.
 6. Power BI connects to the Gold layer for visual reporting.
 
-## Data Pipeline[cite: 1]
+## Data Pipeline
 
 - **Extract / Ingest:** `bronze/generate_bronze_data.py` creates source records in MongoDB simulating real-time player interactions.
 - **Transform:** `silver/jobs/process_events.py` reads raw data, enforces data types, flattens nested JSON, and writes clean Parquet files to local storage.
