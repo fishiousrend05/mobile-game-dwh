@@ -5,7 +5,7 @@
 This project is an end-to-end Data Engineering pipeline for a simulated mobile game telemetry system. It generates realistic player data, stores raw events, transforms them using PySpark, safely loads them into MySQL, and builds analytics-ready data marts.
 - **Problem solved:** Creates a reliable pipeline for analyzing player engagement, retention, progression funnels, and monetization.
 - **Data sources:** Synthetic `users`, `devices`, `events` (e.g., login, level_up), and `purchases` data generated with Faker and stored in MongoDB.
-- **Final output:** Silver-layer Parquet files, MySQL dimension/fact tables (Gold), analytical SQL views (Marts), and a Power BI report file (`game_dashboard.pbix`).
+- **Final output:** Silver-layer Parquet files, MySQL dimension/fact tables (Gold), analytical SQL views (Marts).
 
 ##  Architecture
 
@@ -17,7 +17,6 @@ Pipeline flow:
 3. A PySpark JDBC job loads the data into MySQL using an intelligent Upsert mechanism (Gold Layer).
 4. SQL scripts aggregate the data into business-ready Data Marts (e.g., `vw_user_journey`, `vw_paying_users`).
 5. Prefect orchestrates the entire daily batch pipeline, managing dependencies and logging.
-6. Power BI connects to the Gold layer for visual reporting.
 
 ## Data Pipeline
 
@@ -26,7 +25,7 @@ Pipeline flow:
 - **Load:** `silver/jobs/load_gold.py` loads Parquet files into MySQL. It uses an `INSERT ... ON DUPLICATE KEY UPDATE` pattern combined with `COALESCE()` to ensure Anti-Null Overwrites (SCD Type 1) for static user attributes.
 - **Orchestration:** Prefect is integrated to schedule the workflow, track task execution, and manage retries.
 - **Data Quality / Validation:** PySpark filters out invalid event schemas early in the Silver layer, while Gold layer constraints protect historical data integrity.
-- **Analytics / Dashboard:** `run_marts.py` executes business rules to construct funnel and retention metrics. `game_dashboard.pbix` is included for Power BI reporting.
+- **Analytics / Dashboard:** `run_marts.py` executes business rules to construct funnel and retention metrics.
 
 ## Tech Stack
 
@@ -94,11 +93,6 @@ python run_backfill.py --start 2026-01-26 --end 2026-04-17
 python run_marts.py --date 2026-04-17
 ```
 
-6. Start Orchestration.
-
-```bash
-prefect server start
-```
 
 
 ## Key Learnings
@@ -106,7 +100,6 @@ prefect server start
 - Cleaned Parquet files partitioned by date.
 - Highly accurate MySQL dimension and fact tables free of null-overwrite errors.
 - Pre-aggregated Data Marts ready to answer questions about DAU, MAU, retention, and drop-off rates
-- Power BI report file: `game_dashboard.pbix`.
 
 
 ##  Key Learnings
